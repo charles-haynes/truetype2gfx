@@ -85,8 +85,6 @@ if (isset($_POST["submit-file"])) {
 			margin: 0px;
 			padding-top: 90px;
 			padding-left:50px;
-			background-image:url('M5Stack-bg.png');
-			background-repeat:no-repeat;
 			width: 480px;
 			height: 429px;
 		}
@@ -98,6 +96,12 @@ if (isset($_POST["submit-file"])) {
 		}
 		#textfield {
 			width: 200px;
+		}
+		#widthfield {
+			width: 70px;
+		}
+		#heightfield {
+			width: 70px;
 		}
 		#sizefield {
 			width: 35px;
@@ -162,6 +166,13 @@ if (isset($_POST["submit-file"])) {
 			<td id="third">
 				<h3>Font Size</h3>
 				<input type="text" name="size" id="sizefield" value="20" onInput="updateImage()"> points
+				
+				&nbsp;<br>
+				&nbsp;<br>
+
+				<h3>Screen Size</h3>
+				<input type="text" name="width" id="widthfield" value="320" onInput="updateImage()"> x 
+				<input type="text" name="height" id="heightfield" value="240" onInput="updateImage()">
 				
 				&nbsp;<br>
 				&nbsp;<br>
@@ -251,7 +262,7 @@ void loop() {
 	<script>		
 	
 		function updateImage() {
-			document.getElementById("image").src = "image.php?font=" + font() + "&size=" + document.getElementById("sizefield").value + "&text=" + document.getElementById("textfield").value+ "#" + new Date().getTime();
+			document.getElementById("image").src = "image.php?font=" + font() + "&size=" + document.getElementById("sizefield").value + "&width=" + document.getElementById("widthfield").value + "&height=" + document.getElementById("heightfield").value + "&text=" + document.getElementById("textfield").value + "#" + new Date().getTime();
 		}
 	
 		function font() {
