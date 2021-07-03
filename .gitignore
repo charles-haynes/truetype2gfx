@@ -1,2 +1,3 @@
-fonts/user/*.ttf
-fontconvert
+fonts/user/*
+!fonts/user/README.md
+!fonts/user/index.html
