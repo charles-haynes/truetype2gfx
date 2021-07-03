@@ -44,7 +44,7 @@ if (isset($_POST["submit-file"])) {
 	$target_file = $target_dir . $filename;
 	$select_font = "user/$filename";
 	
-	if (strtolower(substr($target_file, -4)) == ".ttf") {
+	if ((strtolower(substr($target_file, -4)) == ".ttf") or (strtolower(substr($target_file, -4)) == ".otf")) {
 		if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 			if (!in_array($filename, $_SESSION['fonts'])) {
 				array_push($_SESSION['fonts'], $filename);
@@ -277,9 +277,9 @@ void loop() {
 		
 		function validateUpload() {
   			var file = document.getElementById("fileToUpload").value;
-			var reg = /(.*?)\.(ttf|TTF)$/;
+			var reg = /(.*?)\.(ttf|TTF|otf|OTF)$/;
 			if(!file.match(reg)) {
-				alert("You can only upload a TrueType font (.ttf or .TTF extension)");
+				alert("You can only upload a TrueType or OpenType font (.ttf or .otf extension)");
 				return false;
 			}
 		}
