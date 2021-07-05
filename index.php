@@ -9,20 +9,19 @@ if (isset($_POST["get-font"])) {
 	//if (!isset($_POST['size']) || gettype($_POST['size']) != "integer" || $_POST['size'] < 3) exit();
 	$size = $_POST['size'];
 
-	if (!isset($_POST['font'])) exit();	
+	if (!isset($_POST['font'])) exit();
 	$font = escapeshellarg("fonts/" . $_POST['font']);
-	
-	
+
 	exec("./fontconvert $font $size", $output, $retval);
 	if ($retval != 0) exit();
-	
+
 	$filename = $output[count($output) - 6];
 	$filename = str_replace("const GFXfont ", "", $filename);
 	$filename = str_replace(" PROGMEM = {", ".h", $filename);
-	
+
 
 	header("Content-Disposition: attachment; filename=\"$filename\"");
-	
+
 	foreach ($output as $line) echo "$line\n";
 
 	exit();
@@ -43,7 +42,7 @@ if (isset($_POST["submit-file"])) {
 	$filename = basename($_FILES["fileToUpload"]["name"]);
 	$target_file = $target_dir . $filename;
 	$select_font = "user/$filename";
-	
+
 	if ((strtolower(substr($target_file, -4)) == ".ttf") or (strtolower(substr($target_file, -4)) == ".otf")) {
 		if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 			if (!in_array($filename, $_SESSION['fonts'])) {
@@ -118,7 +117,7 @@ if (isset($_POST["submit-file"])) {
 
 <body onload = 'setFont()'>
 
-	
+
 	&nbsp;<br>
 
 	<table>
@@ -135,72 +134,75 @@ if (isset($_POST["submit-file"])) {
 				<img id="image" src="image.php">
 			</td>
 			<td id="second">
-			
+
 				<form action="" method="post" enctype="multipart/form-data">
-			
+
 				<h3>FreeFonts</h3>
-				<input type="radio" name="font" value="FreeSans.ttf" checked onChange="updateImage()"> FreeSans<br>
-				<input type="radio" name="font" value="FreeSansBold.ttf" onChange="updateImage()"> FreeSansBold<br>
-				<input type="radio" name="font" value="FreeSansBoldOblique.ttf" onChange="updateImage()"> FreeSansBoldOblique<br>
-				<input type="radio" name="font" value="FreeSansOblique.ttf" onChange="updateImage()"> FreeSansOblique<br>
-				<input type="radio" name="font" value="FreeSerif.ttf" onChange="updateImage()"> FreeSerif<br>
-				<input type="radio" name="font" value="FreeSerifBold.ttf" onChange="updateImage()"> FreeSerifBold<br>
-				<input type="radio" name="font" value="FreeSerifBoldItalic.ttf" onChange="updateImage()"> FreeSerifBoldItalic<br>
-				<input type="radio" name="font" value="FreeSerifItalic.ttf" onChange="updateImage()"> FreeSerifItalic<br>
-				<input type="radio" name="font" value="FreeMono.ttf" onChange="updateImage()"> FreeMono<br>
-				<input type="radio" name="font" value="FreeMonoBold.ttf" onChange="updateImage()"> FreeMonoBold<br>
-				<input type="radio" name="font" value="FreeMonoBoldOblique.ttf" onChange="updateImage()"> FreeMonoBoldOblique<br>
-				<input type="radio" name="font" value="FreeMonoOblique.ttf" onChange="updateImage()"> FreeMonoOblique<br>
-				
+				<input type="radio" name="font" value="FreeSans.ttf" checked onChange="updateImageAndGlyphs()"> FreeSans<br>
+				<input type="radio" name="font" value="FreeSansBold.ttf" onChange="updateImageAndGlyphs()"> FreeSansBold<br>
+				<input type="radio" name="font" value="FreeSansBoldOblique.ttf" onChange="updateImageAndGlyphs()"> FreeSansBoldOblique<br>
+				<input type="radio" name="font" value="FreeSansOblique.ttf" onChange="updateImageAndGlyphs()"> FreeSansOblique<br>
+				<input type="radio" name="font" value="FreeSerif.ttf" onChange="updateImageAndGlyphs()"> FreeSerif<br>
+				<input type="radio" name="font" value="FreeSerifBold.ttf" onChange="updateImageAndGlyphs()"> FreeSerifBold<br>
+				<input type="radio" name="font" value="FreeSerifBoldItalic.ttf" onChange="updateImageAndGlyphs()"> FreeSerifBoldItalic<br>
+				<input type="radio" name="font" value="FreeSerifItalic.ttf" onChange="updateImageAndGlyphs()"> FreeSerifItalic<br>
+				<input type="radio" name="font" value="FreeMono.ttf" onChange="updateImageAndGlyphs()"> FreeMono<br>
+				<input type="radio" name="font" value="FreeMonoBold.ttf" onChange="updateImageAndGlyphs()"> FreeMonoBold<br>
+				<input type="radio" name="font" value="FreeMonoBoldOblique.ttf" onChange="updateImageAndGlyphs()"> FreeMonoBoldOblique<br>
+				<input type="radio" name="font" value="FreeMonoOblique.ttf" onChange="updateImageAndGlyphs()"> FreeMonoOblique<br>
+
 				<h3>Your fonts</h3>
 				<?php
 					foreach ($_SESSION['fonts'] as $font) {
-						echo "<input type=\"radio\" name=\"font\" value=\"user/$font\" onChange=\"updateImage()\"> " . str_replace(".TTF", "", str_replace(".ttf", "", $font)) . "<br>\n";
+						echo "<input type=\"radio\" name=\"font\" value=\"user/$font\" onChange=\"updateImageAndGlyphs()\"> " . str_replace(".TTF", "", str_replace(".ttf", "", $font)) . "<br>\n";
 					}
 				?>
-				
+
 				&nbsp;<br>
-				
-				<input type="submit" value="Upload" name="submit-file" onClick="return validateUpload();"> <input type="file" name="fileToUpload" id="fileToUpload"> 
+
+				<input type="submit" value="Upload" name="submit-file" onClick="return validateUpload();"> <input type="file" name="fileToUpload" id="fileToUpload">
 			</td>
 			<td id="third">
 				<h3>Font Size</h3>
 				<input type="text" name="size" id="sizefield" value="20" onInput="updateImage()"> points
-				
+
 				&nbsp;<br>
 				&nbsp;<br>
 
 				<h3>Screen Size</h3>
-				<input type="text" name="width" id="widthfield" value="320" onInput="updateImage()"> x 
+				<input type="text" name="width" id="widthfield" value="320" onInput="updateImage()"> x
 				<input type="text" name="height" id="heightfield" value="240" onInput="updateImage()">
-				
+
 				&nbsp;<br>
 				&nbsp;<br>
 
 				<h3>Demo text</h3>
 				<input type="text" name="text" id="textfield" value="Testing 123..." onInput="updateImage()">
-				
+
 				&nbsp;<br>
 				&nbsp;<br>
+
+				<h3>Glyphs</h3>
+				<img id="glyphs" src="glyphs.php">
 				&nbsp;<br>
 				&nbsp;<br>
-				
+
 				<input type="submit" id="get-font" value="Get GFX font file" name="get-font">
-				
+
 				</form>
-				
+
 			</td>
 		</tr>
-		
+
 		<tr>
 			<td colspan=3>
-	
-&nbsp<br>	
-			
+
+&nbsp<br>
+
 <h3>Introducing truetype2gfx</h3>
 
 <p>Many Arduino projects and ready-built devices come with a display. And the Adafruit GFX display driver is used by many of them to display variable-width fonts. Some fonts usually are included with the driver, and then there's a complicated procedure for adding your own fonts. It involves compiling tools and a trial-and-error process for figuring out how big the font will turn out on your display.</p>
-			
+
 <p>But now you can skip all that and convert the fonts your Arduino project needs with ease. No need to compile tools, no more guessing how big a font will be. Simply select a FreeFont or upload any TrueType font, select a size, download the include file and you're ready to use the font in your project.</p>
 
 <h3>The size thing</h3>
@@ -209,10 +211,10 @@ if (isset($_POST["submit-file"])) {
 
 <blockquote><code>#define DPI 141 // Approximate res. of Adafruit 2.8" TFT </code></blockquote>
 
-<p>But since everyone keeps the setting, a certain font at 20 points is going to take up the same number of pixels on a 
-lot of devices. And then there's the different fonts displaying at radically different sizes due to various metrics 
-included in the font. (See <a href="https://iamvdo.me/en/blog/css-font-metrics-line-height-and-vertical-align">here</a> 
-for details.) But I don't have to care about that: when I make gfx fonts and include them on my device, they are the 
+<p>But since everyone keeps the setting, a certain font at 20 points is going to take up the same number of pixels on a
+lot of devices. And then there's the different fonts displaying at radically different sizes due to various metrics
+included in the font. (See <a href="https://iamvdo.me/en/blog/css-font-metrics-line-height-and-vertical-align">here</a>
+for details.) But I don't have to care about that: when I make gfx fonts and include them on my device, they are the
 same size as they are on the virtual device on the screen above. (This only works if your screen is 320x240 pixels. If your screen dimensions are different, you can still see the size relative to the FreeFonts of a given size.)</p>
 
 <h3>Your own fonts</h3>
@@ -223,7 +225,7 @@ same size as they are on the virtual device on the screen above. (This only work
 
 <h3>Example</h3>
 
-<p>I found a nice font on this website listed above. It was called "Black Street" and the font file I uploaded was 
+<p>I found a nice font on this website listed above. It was called "Black Street" and the font file I uploaded was
 "Black Street.ttf". I fiddled with the size until it filled the display nicely, at 35 points. I then hit the "Get GFX font file" button and my browser downloaded a file called "Black_Street35pt7b.h". I created a new Arduino sketch with the following content:</p>
 
 <blockquote><pre>
@@ -242,7 +244,7 @@ void setup
 void loop() {
 }
 </pre></blockquote>
-			
+
 <p>I then added the "Black_Street35p7b.h" from my "Download" directory as a second tab with "Sketch / Add file..." in the Arduino IDE, ran the program et voila:</p>
 
 <img src="truetype2gfx_demo.png">
@@ -256,15 +258,24 @@ void loop() {
 			</td>
 		</tr>
 	</table>
-	
-	
-	
-	<script>		
-	
+
+
+
+	<script>
+
 		function updateImage() {
 			document.getElementById("image").src = "image.php?font=" + font() + "&size=" + document.getElementById("sizefield").value + "&width=" + document.getElementById("widthfield").value + "&height=" + document.getElementById("heightfield").value + "&text=" + document.getElementById("textfield").value + "#" + new Date().getTime();
 		}
-	
+
+		function updateGlyphs() {
+			document.getElementById("glyphs").src = "glyphs.php?font=" + font() + "#" + new Date().getTime();
+		}
+
+		function updateImageAndGlyphs() {
+			updateImage();
+			updateGlyphs();
+		}
+
 		function font() {
 			var fonts = document.getElementsByName('font');
 			for (var i = 0, length = fonts.length; i < length; i++) {
@@ -274,7 +285,7 @@ void loop() {
 			}
 			return "";
 		}
-		
+
 		function setFont() {
 			var e = document.getElementsByName("font");
 			for (var i = 0; i < e.length; i++) {
@@ -283,18 +294,18 @@ void loop() {
 					break;
 				}
 			}
-			updateImage();
+			updateImageAndGlyphs();
 		}
-		
+
 		function validateUpload() {
-  			var file = document.getElementById("fileToUpload").value;
+			var file = document.getElementById("fileToUpload").value;
 			var reg = /(.*?)\.(ttf|TTF|otf|OTF)$/;
 			if(!file.match(reg)) {
 				alert("You can only upload a TrueType or OpenType font (.ttf or .otf extension)");
 				return false;
 			}
 		}
-		
+
 	</script>
 </body>
 
