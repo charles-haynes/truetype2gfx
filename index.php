@@ -11,8 +11,9 @@ if (isset($_POST["get-font"])) {
 
 	if (!isset($_POST['font'])) exit();
 	$font = escapeshellarg("fonts/" . $_POST['font']);
+	$s = escapeshellarg($_POST['includedGlyphs']);
 
-	exec("./fontconvert $font $size", $output, $retval);
+	exec("./fontconvert $font $size -s $s", $output, $retval);
 	if ($retval != 0) exit();
 
 	$filename = $output[count($output) - 6];
@@ -184,6 +185,12 @@ if (isset($_POST["submit-file"])) {
 
 				<h3>Glyphs</h3>
 				<img id="glyphs" src="glyphs.php">
+				&nbsp;<br>
+				&nbsp;<br>
+
+				<h3>Glyphs to include</h3>
+				<textarea rows="8" cols="32" name="includedGlyphs" id="includedGlyphs"> !&quot;#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~</textarea>
+
 				&nbsp;<br>
 				&nbsp;<br>
 
