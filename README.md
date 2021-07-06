@@ -2,8 +2,6 @@
 
 ### Converting fonts from TrueType to Adafruit GFX
 
-[![](truetype2gfx-screenshot.png)](https://rop.nl/truetype2gfx)
-
 Many Arduino projects and ready-built devices come with a display. And
 the Adafruit GFX display driver is used by many of them to display
 variable-width fonts. Some fonts usually are included with the driver,
@@ -57,3 +55,10 @@ If you want to run your own server because:
 
 3. Make sure the fonts/user directory is writable for the webserver
    user.
+
+This tool is basically a clone of https://github.com/ropg/truetype2gfx
+with a few tweaks. All the credit should go to it's author <a
+href="https://github.com/ropg">Rop Gonggrijp</a> who is also the
+author of the awesome <a
+href="https://github.com/ropg/ezTime">exTime</a> Arduino date and time
+library.
