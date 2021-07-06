@@ -11,7 +11,11 @@ if (isset($_POST["get-font"])) {
 
 	if (!isset($_POST['font'])) exit();
 	$font = escapeshellarg("fonts/" . $_POST['font']);
-	$s = escapeshellarg($_POST['includedGlyphs']);
+	$s = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+	if (isset($_POST['includedGlyphs'])) {
+		$s = $_POST['includedGlyphs'];
+	}
+	$s = escapeshellarg($s);
 
 	exec("./fontconvert $font $size -s $s", $output, $retval);
 	if ($retval != 0) exit();
@@ -139,23 +143,23 @@ if (isset($_POST["submit-file"])) {
 				<form action="" method="post" enctype="multipart/form-data">
 
 				<h3>FreeFonts</h3>
-				<input type="radio" name="font" value="FreeSans.ttf" checked onChange="updateImageAndGlyphs()"> FreeSans<br>
-				<input type="radio" name="font" value="FreeSansBold.ttf" onChange="updateImageAndGlyphs()"> FreeSansBold<br>
-				<input type="radio" name="font" value="FreeSansBoldOblique.ttf" onChange="updateImageAndGlyphs()"> FreeSansBoldOblique<br>
-				<input type="radio" name="font" value="FreeSansOblique.ttf" onChange="updateImageAndGlyphs()"> FreeSansOblique<br>
-				<input type="radio" name="font" value="FreeSerif.ttf" onChange="updateImageAndGlyphs()"> FreeSerif<br>
-				<input type="radio" name="font" value="FreeSerifBold.ttf" onChange="updateImageAndGlyphs()"> FreeSerifBold<br>
-				<input type="radio" name="font" value="FreeSerifBoldItalic.ttf" onChange="updateImageAndGlyphs()"> FreeSerifBoldItalic<br>
-				<input type="radio" name="font" value="FreeSerifItalic.ttf" onChange="updateImageAndGlyphs()"> FreeSerifItalic<br>
-				<input type="radio" name="font" value="FreeMono.ttf" onChange="updateImageAndGlyphs()"> FreeMono<br>
-				<input type="radio" name="font" value="FreeMonoBold.ttf" onChange="updateImageAndGlyphs()"> FreeMonoBold<br>
-				<input type="radio" name="font" value="FreeMonoBoldOblique.ttf" onChange="updateImageAndGlyphs()"> FreeMonoBoldOblique<br>
-				<input type="radio" name="font" value="FreeMonoOblique.ttf" onChange="updateImageAndGlyphs()"> FreeMonoOblique<br>
+				<input type="radio" name="font" value="FreeSans.ttf" checked onChange="updateImage()"> FreeSans<br>
+				<input type="radio" name="font" value="FreeSansBold.ttf" onChange="updateImage()"> FreeSansBold<br>
+				<input type="radio" name="font" value="FreeSansBoldOblique.ttf" onChange="updateImage()"> FreeSansBoldOblique<br>
+				<input type="radio" name="font" value="FreeSansOblique.ttf" onChange="updateImage()"> FreeSansOblique<br>
+				<input type="radio" name="font" value="FreeSerif.ttf" onChange="updateImage()"> FreeSerif<br>
+				<input type="radio" name="font" value="FreeSerifBold.ttf" onChange="updateImage()"> FreeSerifBold<br>
+				<input type="radio" name="font" value="FreeSerifBoldItalic.ttf" onChange="updateImage()"> FreeSerifBoldItalic<br>
+				<input type="radio" name="font" value="FreeSerifItalic.ttf" onChange="updateImage()"> FreeSerifItalic<br>
+				<input type="radio" name="font" value="FreeMono.ttf" onChange="updateImage()"> FreeMono<br>
+				<input type="radio" name="font" value="FreeMonoBold.ttf" onChange="updateImage()"> FreeMonoBold<br>
+				<input type="radio" name="font" value="FreeMonoBoldOblique.ttf" onChange="updateImage()"> FreeMonoBoldOblique<br>
+				<input type="radio" name="font" value="FreeMonoOblique.ttf" onChange="updateImage()"> FreeMonoOblique<br>
 
 				<h3>Your fonts</h3>
 				<?php
 					foreach ($_SESSION['fonts'] as $font) {
-						echo "<input type=\"radio\" name=\"font\" value=\"user/$font\" onChange=\"updateImageAndGlyphs()\"> " . str_replace(".TTF", "", str_replace(".ttf", "", $font)) . "<br>\n";
+						echo "<input type=\"radio\" name=\"font\" value=\"user/$font\" onChange=\"updateImage()\"> " . str_replace(".TTF", "", str_replace(".ttf", "", $font)) . "<br>\n";
 					}
 				?>
 
@@ -165,14 +169,14 @@ if (isset($_POST["submit-file"])) {
 			</td>
 			<td id="third">
 				<h3>Font Size</h3>
-				<input type="text" name="size" id="sizefield" value="20" onInput="updateImage()"> points
+				<input type="text" name="size" id="sizefield" value="16" onInput="updateImage()"> points
 
 				&nbsp;<br>
 				&nbsp;<br>
 
 				<h3>Screen Size</h3>
-				<input type="text" name="width" id="widthfield" value="320" onInput="updateImage()"> x
-				<input type="text" name="height" id="heightfield" value="240" onInput="updateImage()">
+				<input type="text" name="width" id="widthfield" value="200" onInput="updateImage()"> x
+				<input type="text" name="height" id="heightfield" value="200" onInput="updateImage()">
 
 				&nbsp;<br>
 				&nbsp;<br>
@@ -180,11 +184,6 @@ if (isset($_POST["submit-file"])) {
 				<h3>Demo text</h3>
 				<input type="text" name="text" id="textfield" value="Testing 123..." onInput="updateImage()">
 
-				&nbsp;<br>
-				&nbsp;<br>
-
-				<h3>Glyphs</h3>
-				<img id="glyphs" src="glyphs.php">
 				&nbsp;<br>
 				&nbsp;<br>
 
@@ -274,15 +273,6 @@ void loop() {
 			document.getElementById("image").src = "image.php?font=" + font() + "&size=" + document.getElementById("sizefield").value + "&width=" + document.getElementById("widthfield").value + "&height=" + document.getElementById("heightfield").value + "&text=" + document.getElementById("textfield").value + "#" + new Date().getTime();
 		}
 
-		function updateGlyphs() {
-			document.getElementById("glyphs").src = "glyphs.php?font=" + font() + "#" + new Date().getTime();
-		}
-
-		function updateImageAndGlyphs() {
-			updateImage();
-			updateGlyphs();
-		}
-
 		function font() {
 			var fonts = document.getElementsByName('font');
 			for (var i = 0, length = fonts.length; i < length; i++) {
@@ -301,7 +291,7 @@ void loop() {
 					break;
 				}
 			}
-			updateImageAndGlyphs();
+			updateImage();
 		}
 
 		function validateUpload() {
