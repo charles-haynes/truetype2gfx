@@ -17,13 +17,12 @@ upload any TrueType or OpenType font, select a size, specify the glyphs
 you want, download the include file and you're ready to use the font
 in your project.
 
-### If you just want to use truetype2gfx [click here](https://gfx.stfw.org)
+### [Click here if you just want to use truetype2gfx](https://gfx.stfw.org)
 
 This is the github repository. The tool itself is a server thing that
-works with your webbrowser. It is available for your use
-[**here**](https://gfx.stfw.org), no need to install anything, just
-click. That webpage has not only the tool but also all the information
-you will need to use it.
+works with your browser. It is publically available no need to install
+anything, [just click](https://gfx.stfw.org). That webpage has the
+tool and all the information needed to use it.
 
 This repository has the PHP/Javascript source and documents how to
 install it if you want to run a copy on your own server, or just see
@@ -60,5 +59,5 @@ This tool is basically a clone of https://github.com/ropg/truetype2gfx
 with a few tweaks. All the credit should go to it's author <a
 href="https://github.com/ropg">Rop Gonggrijp</a> who is also the
 author of the awesome <a
-href="https://github.com/ropg/ezTime">exTime</a> Arduino date and time
+href="https://github.com/ropg/ezTime">ezTime</a> Arduino date and time
 library.
