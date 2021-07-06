@@ -207,59 +207,85 @@ if (isset($_POST["submit-file"])) {
 
 <h3>Introducing truetype2gfx</h3>
 
-<p>Many Arduino projects and ready-built devices come with a display. And the Adafruit GFX display driver is used by many of them to display variable-width fonts. Some fonts usually are included with the driver, and then there's a complicated procedure for adding your own fonts. It involves compiling tools and a trial-and-error process for figuring out how big the font will turn out on your display.</p>
+<p>Many Arduino projects and ready-built devices come with a
+display. And the Adafruit GFX display driver is used by many of them
+to display variable-width fonts. Some fonts usually are included with
+the driver, and then there's a complicated procedure for adding your
+own fonts. It involves compiling tools and a trial-and-error process
+for figuring out how big the font will turn out on your display.</p>
 
-<p>But now you can skip all that and convert the fonts your Arduino project needs with ease. No need to compile tools, no more guessing how big a font will be. Simply select a FreeFont or upload any TrueType font, select a size, download the include file and you're ready to use the font in your project.</p>
+<p>But now you can skip all that and easily convert the fonts your
+Arduino project needs. No need to compile tools, no more guessing how
+big a font will be. Just select a FreeFont or upload any TrueType or
+OpenType font, select a size, specify which glyphs you want, download
+the include file and you're ready to use the font in your project.</p>
 
 <h3>The size thing</h3>
 
-<p>Font sizes are given in points, where a point is 1/72 of an inch, describing the actual size on a display. Or that's what it's supposed to mean, but pretty much everyone that uses the Adafruit software keeps the setting of 141 pixels per inch. In the Adafruit software it says:</p>
+<p>Font sizes are given in points, where a point is 1/72 of an inch,
+describing the actual size on a display. Or that's what it's supposed
+to mean, but pretty much everyone that uses the Adafruit software
+keeps the setting of 141 pixels per inch. In the Adafruit software it
+says:</p>
 
 <blockquote><code>#define DPI 141 // Approximate res. of Adafruit 2.8" TFT </code></blockquote>
 
-<p>But since everyone keeps the setting, a certain font at 20 points is going to take up the same number of pixels on a
-lot of devices. And then there's the different fonts displaying at radically different sizes due to various metrics
-included in the font. (See <a href="https://iamvdo.me/en/blog/css-font-metrics-line-height-and-vertical-align">here</a>
-for details.) But I don't have to care about that: when I make gfx fonts and include them on my device, they are the
-same size as they are on the virtual device on the screen above. (This only works if your screen is 320x240 pixels. If your screen dimensions are different, you can still see the size relative to the FreeFonts of a given size.)</p>
+<p>But since everyone keeps the setting, a certain font at 20 points
+is going to take up the same number of <i>pixels</i> on a lot of
+devices. <a href="https://iamvdo.me/en/blog/css-font-metrics-line-height-and-vertical-align">And
+different fonts displaying at radically different sizes due to metrics
+included in the font.</a> But I don't have to care about that: when I
+make gfx fonts and include them on my device, they are the same size
+as they are on the virtual device on the screen above. (Adjust the
+screen dimensions to match the device you're using.)</p>
 
 <h3>Your own fonts</h3>
 
-<p>TrueType fonts are everywhere online. At the time of writing this, you can get loads and loads of pretty TrueType fonts <a href="https://www.1001freefonts.com">here</a> but you can also pick up fonts at any of <a href = "https://www.google.de/search?q=truetype+free+fonts">these sites</a>. (Beware of malware: do not unpack ".exe archives" or do anything else silly with files downloaded from these sites.)</p>
+<p>TrueType and OpenType fonts are everywhere online. At the time of
+writing this, you can get loads and loads of pretty TrueType fonts
+at <a href="https://www.1001freefonts.com">1001freefonts</a>,
+<a href="https://www.dafont.com">dafont</a>,
+or <a href="https://fonts.google.com">Google Fonts</a>. But
+the best in my opinion is
+<a href="https://www.myfonts.com">MyFonts</a>. MyFonts has loads of
+free and commercial fonts and great tools for finding them.</p>
 
-<p>Using this tool, you can upload and then view and convert up to five fonts (which are only available to you). If you upload a sixth font, the first one disappears. Also note that these fonts will only last as long as your PHP session does, so whenever you come back a day later, your fonts may be gone. It's really only meant to be a short-term buffer.</p>
+<p>Using this tool, you can upload your favorite font then view and
+convert up to five fonts (which are only available to you). If you
+upload a sixth font, the first one disappears. Also note that these
+fonts will only last as long as your PHP session does, so if you come
+back a day later, your fonts may be gone. It's really only meant to be
+for immediate use.</p>
+
+<p>If after downloading the font you discover it isn't exactly what
+you wanted, there's a
+nice <a href="https://tchapi.github.io/Adafruit-GFX-Font-Customiser/">online
+GFX font editing tool</a> that lets you pixel edit the glyphs as well
+as add or remove glyphs from the font.</p>
 
 <h3>Example</h3>
 
-<p>I found a nice font on this website listed above. It was called "Black Street" and the font file I uploaded was
-"Black Street.ttf". I fiddled with the size until it filled the display nicely, at 35 points. I then hit the "Get GFX font file" button and my browser downloaded a file called "Black_Street35pt7b.h". I created a new Arduino sketch with the following content:</p>
-
-<blockquote><pre>
-#include &lt;M5Stack.h&gt;
-#include "Black_Street35pt7b.h"
-
-void setup
-  m5.begin();
-  m5.lcd.fillScreen(TFT_WHITE);
-  m5.lcd.setTextColor(TFT_BLACK);
-  m5.lcd.setTextDatum(CC_DATUM);
-  m5.lcd.setFreeFont(&Black_Street35pt7b);
-  m5.lcd.drawString("Testing 123...", 160, 120);
-}
-
-void loop() {
-}
-</pre></blockquote>
-
-<p>I then added the "Black_Street35p7b.h" from my "Download" directory as a second tab with "Sketch / Add file..." in the Arduino IDE, ran the program et voila:</p>
-
-<img src="truetype2gfx_demo.png">
-
-<p><i>(If you do not have an M5Stack but some other device your library will not be called M5Stack.h and your display will not be at "m5.lcd", but you'll figure it out...)</i></p>
+<p>I'm a big fan of the <b>OpenSans</b> family, available
+from <a href="https://fonts.google.com/specimen/Open+Sans">Google
+Fonts</a> (and MyFonts).  I downloaded the family and then uploaded
+"OpenSans-Regular.ttf". I fiddled with the size until it looked nice
+at 12 points. I only need lowercase letters so I made sure "Glyphs to
+include" was just "abcdefghijklmnopqrstuvwxyz" and I then hit the "Get
+GFX font file" button and my browser downloaded a file called
+"OpenSans_Regular12pt7b.h".  I then added the
+"OpenSans_Regular12pt7b.h" from my "Download" directory as a second
+tab with "Sketch / Add file..." in the Arduino IDE, and included it
+with <code>#include "OpenSans_Regular12pt7b.h"</code></p>
 
 <h3>Source code, bug reports, questions, etc..</h3>
 
-<p>This tool has a <a href="https://github.com/ropg/truetype2gfx">github repository</a> that has the (quick-hack-style) PHP/Javascript code behind all this. And if you have any questions, bug reports or suggestions, simply <a href="https://github.com/ropg/truetype2gfx/issues/new">open a new issue</a> there and I will see what I can do. </p>
+<p>This tool has
+a <a href="https://github.com/charles-haynes/truetype2gfx">github
+repository</a> that has the (quick-hack-style) PHP/Javascript code
+behind all this. If you have any questions, bug reports or
+suggestions,
+please <a href="https://github.com/charles-haynes/truetype2gfx/issues/new">open
+an issue</a> and I'll see what I can do. </p>
 
 			</td>
 		</tr>
